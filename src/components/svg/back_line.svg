@@ -1,0 +1,21 @@
+<svg width="580" height="400" xmlns="http://www.w3.org/2000/svg">
+
+<radialGradient id="linear-gradient">
+  <stop offset="1%" stop-color="#3C8291"/>
+  <stop offset="100%" stop-color="#00B5AD"/>
+ 
+</radialGradient>
+
+<defs>
+  <filter id="shadow" x="0" y="0" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceAlpha" dx="-10" dy="-15" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="20" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+</defs>
+
+<path  fill="url(#linear-gradient)"  filter="url(#shadow)" d="m63,281.45693c42,46.370242 -23,-31.616074 92,-28.454466c115,3.161607 211,54.801195 323,120.141081c112,65.339886 99,-9.484822 97,-55.855064c-2,-46.370242 -18,-194.965789 -48,-235.012816c-30,-40.047027 -103,-57.962802 -139,-57.962802c-36,0 -318,-52.693467 -364,28.454466c-46,81.147923 -3,182.319359 39,228.689601z" fill-opacity="null" stroke-opacity="null" stroke-width="1" />
+
+</svg>
+
+

@@ -1,25 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  Container
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import { ThemeProvider } from '@material-ui/core/styles'
+import customTheme from './theme/custom_theme';
+import styleApp from './theme/styleApp';
+import TextSimulator from './components/textSimulator';
+// import config from './config.json';
+// import { Height } from '@material-ui/icons';
+
+
 
 function App() {
+  const classes = styleApp();
+
+  const [currentKeyword, setCurrentKeyword] = React.useState('');
+
+  React.useEffect(() => {
+    document.addEventListener("keypress", (e) => {
+      setCurrentKeyword(e.key );
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={customTheme}>
+      <div className={classes.appContent}>
+        <Container>
+          <TextSimulator keyword={currentKeyword} />
+        </Container>
+      </div>
+    </ThemeProvider>
   );
 }
 
