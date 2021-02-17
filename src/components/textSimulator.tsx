@@ -3,7 +3,7 @@ import {
   Card, CardContent, CardActions,
   CircularProgress,
   Snackbar,
-  Button,
+  // Button,
   Avatar,
   IconButton,
   Switch,
@@ -19,6 +19,10 @@ const textApi = {
   ru: {
     query: 'https://fish-text.ru/get'
   }
+}
+interface TextSimulatorProps {
+  keyword: string,
+  newTimeEnter: number
 }
 
 interface User {
@@ -53,7 +57,7 @@ function createList(text: string,
 }
 
 
-function TextSimulator(props: { keyword?: string }) {
+function TextSimulator(props: TextSimulatorProps) {
   const classes = styleApp();
 
   const [values, setValues] = React.useState({
@@ -115,6 +119,8 @@ function TextSimulator(props: { keyword?: string }) {
     if (currentLetter) {
 
       if (props.keyword === currentLetter.value) {
+        console.log('===', props.keyword, currentLetter.value );
+        
         if (nextLetter) {
           nextLetter.className = classes.nextLetter;
           letterList[nextIndex] = nextLetter;
@@ -125,6 +131,8 @@ function TextSimulator(props: { keyword?: string }) {
         setOpenSnack(false);
 
       } else if (currentLetter.className !== classes.passedLetter) {
+        console.log('!==', props.keyword, currentLetter.value);
+
         currentLetter.className = classes.errorLetter;
         letterList[carrentIndex] = currentLetter;
         if (currentLetter.value?.toLowerCase() === props.keyword && currentLetter.value !== props.keyword) {
@@ -185,7 +193,7 @@ function TextSimulator(props: { keyword?: string }) {
           horizontal: 'center',
         }}
         style={{ backgroundColor: 'white' }}
-        open={openSnack}
+        open={openSnack && onHintError}
         autoHideDuration={1000}
         message={messageSnack}
         action={

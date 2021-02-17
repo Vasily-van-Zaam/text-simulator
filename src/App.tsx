@@ -7,6 +7,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import customTheme from './theme/custom_theme';
 import styleApp from './theme/styleApp';
 import TextSimulator from './components/textSimulator';
+import StartForm from './components/foms/StartForm';
 // import config from './config.json';
 // import { Height } from '@material-ui/icons';
 
@@ -15,11 +16,19 @@ import TextSimulator from './components/textSimulator';
 function App() {
   const classes = styleApp();
 
-  const [currentKeyword, setCurrentKeyword] = React.useState('');
+  const [currentData, setCurrentData] = React.useState({
+    keyword: '',
+    newTimeEnter: 0
+  });
 
   React.useEffect(() => {
     document.addEventListener("keypress", (e) => {
-      setCurrentKeyword(e.key );
+      console.log('enter: ', e.key);
+      
+      setCurrentData({
+        keyword: e.key,
+        newTimeEnter: new Date().getTime()
+      });
     });
   }, []);
 
@@ -27,7 +36,8 @@ function App() {
     <ThemeProvider theme={customTheme}>
       <div className={classes.appContent}>
         <Container>
-          <TextSimulator keyword={currentKeyword} />
+          <StartForm/>
+          <TextSimulator keyword={currentData.keyword} newTimeEnter={currentData.newTimeEnter}/>
         </Container>
       </div>
     </ThemeProvider>
