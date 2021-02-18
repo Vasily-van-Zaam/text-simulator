@@ -6,14 +6,13 @@ export default makeStyles(() => ({
     },
     appContent: {
         background: 'radial-gradient(37.2% 50% at 50% 50%, #ECECEC 0%, #C4C4C4 100%)',
-        minHeight: '100vh',
+        minHeight: '90vh ',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '1.5em',
         inlineSize: 0.5,
-        borderRadius: 6,
     },
     textWrapper: {
         display: 'flex',
@@ -30,6 +29,13 @@ export default makeStyles(() => ({
     loading:{
         display: 'block',
         margin: '0 auto',
+    },
+    restartButton: {
+        position: 'absolute',
+        height: 48,
+        width: 164,
+        right: 100,
+        
     },
     initLetter: {
         color: 'black'

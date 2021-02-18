@@ -8,7 +8,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import mainlogo from '../svg/mainlogo.svg';
 import warning from '../svg/carbon_warning.svg';
 import {InputLogin, InputPassword} from '../common_ui/inputs';
-import styleRoot from './styleAuthForm';
+import styleRoot from './styleForm';
 import {IconOk, BackLine} from '../common_ui/decor';
 
 

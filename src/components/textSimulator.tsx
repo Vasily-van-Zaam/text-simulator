@@ -3,16 +3,20 @@ import {
   Card, CardContent, CardActions,
   CircularProgress,
   Snackbar,
-  // Button,
+  Button,
   Avatar,
   IconButton,
   Switch,
-  Typography
+  Typography,
+  Divider,
+
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import AvTimerIcon from '@material-ui/icons/AvTimer';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import styleApp from '../theme/styleApp';
+import { Label } from '@material-ui/icons';
 
 
 const textApi = {
@@ -67,7 +71,8 @@ function TextSimulator(props: TextSimulatorProps) {
     loading: true,
     currentText: 'А м',
     letterList: [] as LetterData[],
-    passedList: [] as string[]
+    passedList: [] as string[],
+    restart: true
   });
 
   const [speed, setSpeed] = React.useState(0);
@@ -88,14 +93,24 @@ function TextSimulator(props: TextSimulatorProps) {
   const handleCloseSnack = () => {
     setOpenSnack(false);
   };
+
   React.useEffect(() => {
 
+    if(!values.restart) return;
+    
     fetch(textApi.ru.query)
       .then((response) => {
+        setValues({
+          ...values, loading: false,
+          restart: false
+        });
         response.json().then((data) => {
+          console.log('PLPLP');
+
           setValues({
             ...values, loading: false,
-            letterList: createList(data.text, classes.initLetter, classes.nextLetter)
+            restart: false,
+            letterList: createList(data.text, classes.initLetter, classes.nextLetter,)
           });
         })
       })
@@ -104,8 +119,10 @@ function TextSimulator(props: TextSimulatorProps) {
       })
     setValues({ ...values, loading: true });
 
-  }, [])
 
+
+  }, [values.restart])
+  console.log(values.restart);
   React.useEffect(() => {
 
     let carrentIndex = values.passedList.length - 0;
@@ -119,8 +136,8 @@ function TextSimulator(props: TextSimulatorProps) {
     if (currentLetter) {
 
       if (props.keyword === currentLetter.value) {
-        console.log('===', props.keyword, currentLetter.value );
-        
+        console.log('===', props.keyword, currentLetter.value);
+
         if (nextLetter) {
           nextLetter.className = classes.nextLetter;
           letterList[nextIndex] = nextLetter;
@@ -170,13 +187,28 @@ function TextSimulator(props: TextSimulatorProps) {
                 <Typography>СКОРОСТЬ</Typography>
                 <div>
                   <AvTimerIcon style={{ fontSize: 40 }} />
+                  {speed} зн./мин
                 </div>
-                
-                
+
+
                 <Typography>ТОЧНОСТЬ</Typography>
-                <div><GpsFixedIcon style={{ fontSize: 40 }} /></div>
-                <Typography color="textSecondary">Показ ошибок</Typography>
-                <Switch checked={onHintError} onChange={handleOnHint} name="antoine" />
+                <div><GpsFixedIcon style={{ fontSize: 40 }} />
+                  {precision} %
+                </div>
+                <Divider style={{ margin: '20px 0' }} />
+
+                <div>
+                  <Typography color="textSecondary">Показ ошибок</Typography>
+                  <Switch checked={onHintError} onChange={handleOnHint} name="antoine" />
+                </div>
+                <div className={classes.restartButton}>
+
+                  <Button
+                    onClick={() => setValues({ ...values, restart: true })}
+                    color="primary"
+                    startIcon={<RefreshIcon />}
+                  > Начать заново</Button>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -204,6 +236,7 @@ function TextSimulator(props: TextSimulatorProps) {
             <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnack}>
               <CloseIcon fontSize="small" />
             </IconButton>
+
           </React.Fragment>
         }
       />
