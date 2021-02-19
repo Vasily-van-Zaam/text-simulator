@@ -322,7 +322,7 @@ function TextSimulator(props: TextSimulatorProps) {
       >
         <div className={classes.modal}>
 
-          <Typography variant="h4">
+          <Typography variant="h4" style={{textAlign: 'center'}}>
             Поздравляем! {values.userName}
           </Typography>
           <Typography variant="h5">
@@ -336,7 +336,7 @@ function TextSimulator(props: TextSimulatorProps) {
           </Typography>
 
           <div className={classes.modalButton}>
-            <Button variant="outlined" onClick={handleCloseModal}>Ok</Button>
+            <Button color="primary" variant="contained" onClick={handleCloseModal}>Ok</Button>
           </div>
         </div>
 
