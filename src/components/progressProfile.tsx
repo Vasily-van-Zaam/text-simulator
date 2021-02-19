@@ -72,8 +72,8 @@ function ProgressPrpofile() {
                             {values.hystory.map((e: HystoryData, i) => (
                                 <div key={i} className={classes.profileListItem}>
                                     <div>{e.date ?? ''}</div>
-                                    <div>{e.speed ?? ''}</div>
-                                    <div>{e.precision ?? ''}</div>
+                                    <div>{e.speed ?? ''} <span style={{color: 'gray'}}>зн./мин</span></div>
+                                    <div>{e.precision ?? ''} <span style={{color: 'gray'}}>%</span></div>
                                 </div>
                             ))
                             }
