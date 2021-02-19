@@ -35,7 +35,7 @@ export default makeStyles(() => ({
         height: 48,
         width: 164,
         right: 100,
-        
+
     },
     initLetter: {
         color: 'black'
@@ -57,6 +57,26 @@ export default makeStyles(() => ({
         border: '1px solid green',
         borderRadius: 10,
         padding: 3
-
+    },
+    wrapperAvatar:{
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'left',
+    },
+    avatar: {
+        margin: 5
+    },
+    modal: {
+        width: 500,
+        marginTop: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '50vh ',
+        margin: '0 auto',
+        backgroundColor: 'white'
+    },
+    modalButton: {
+        marginTop: 30
     }
 }));

@@ -13,13 +13,9 @@ import customTheme from './theme/custom_theme';
 import styleApp from './theme/styleApp';
 import TextSimulator from './components/textSimulator';
 import StartForm from './components/foms/StartForm';
+import About from './components/about';
+import ProgressPrpofile from './components/progressProfile';
 
-
-interface LocalStorageData {
-  userName?: '',
-  lastResult?: '',
-  hystoryResult?: ''
-}
 
 function App() {
 
@@ -34,10 +30,10 @@ function App() {
 
   const [dataTextSimulator, setTextSimulator] = React.useState({
     keyword: '',
-    newTimeEnter: 0
+    newTimeEnter: 0,
   });
 
-  const [dataPrifile, setPrifile] = React.useState({
+  const [dataProfile, setProfile] = React.useState({
     userName: '',
     hystory: '',
     lastResult: ''
@@ -47,11 +43,12 @@ function App() {
     window.localStorage.setItem('userName', userName)
     setStartState({
       isStart: false,
-      isLoading: false
+      isLoading: false,
     })
   }
 
   React.useEffect(() => {
+
     if (window.localStorage.userName) {
       setStartState({
         isStart: false,
@@ -63,12 +60,10 @@ function App() {
         isLoading: false
       });
     }
-    document.addEventListener("keypress", (e) => {
-      console.log('enter: ', e.key);
-
+    document.addEventListener("keypress", (e) => {    
       setTextSimulator({
         keyword: e.key,
-        newTimeEnter: new Date().getTime()
+        newTimeEnter: new Date().getTime(),
       });
     });
   }, []);
@@ -94,7 +89,6 @@ function App() {
             setMenu(newValue);
           }}
           showLabels
-
         >
           <BottomNavigationAction label="Тестирование"  icon={<AppsIcon />} />
           <BottomNavigationAction label="Достижения" disabled={startState.isStart} icon={<ThumbUpIcon />} />
@@ -110,9 +104,9 @@ function App() {
             startState.isStart && valueMenu !== 2 ?
               <StartForm success={handleStartForm}/> :
               showPage(
-                <TextSimulator keyword={dataTextSimulator.keyword} newTimeEnter={dataTextSimulator.newTimeEnter} />,
-                <p>1</p>,
-                <p>2</p>
+                <TextSimulator  keyword={dataTextSimulator.keyword} newTimeEnter={dataTextSimulator.newTimeEnter} />,
+                <ProgressPrpofile/>,
+                <About/>
               )      
           }
         </Container>

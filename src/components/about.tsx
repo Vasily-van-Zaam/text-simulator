@@ -5,18 +5,11 @@ import {
 } from '@material-ui/core';
 import styleApp from '../theme/styleApp';
 
-function ProgressPrpofile () {
+function  About () {
     const classes = styleApp();
-
-    const [values, setValues] = React.useState({
-        userName: ''
-    });
-    React.useEffect(() => {
-        // window.localStorage.userName
-    });
-
     return (
         <div className={classes.appContent}>
+            
             <Card>
 
                 <CardContent>
@@ -26,6 +19,6 @@ function ProgressPrpofile () {
             </Card>
         </div>
     )
-} 
+}
 
-export default ProgressPrpofile;
+export default About;

@@ -9,15 +9,13 @@ import {
   Switch,
   Typography,
   Divider,
-
+  Modal
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import AvTimerIcon from '@material-ui/icons/AvTimer';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import styleApp from '../theme/styleApp';
-import { Label } from '@material-ui/icons';
-
 
 const textApi = {
   ru: {
@@ -26,16 +24,8 @@ const textApi = {
 }
 interface TextSimulatorProps {
   keyword: string,
-  newTimeEnter: number
-}
-
-interface User {
-  email: string;
-  name?: string;
-  phone?: string;
-  avatar?: string;
-  currentToken?: string;
-  birthday?: string;
+  newTimeEnter: number,
+  timer?: number
 }
 
 interface LetterData {
@@ -60,69 +50,98 @@ function createList(text: string,
   return list;
 }
 
-
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
 function TextSimulator(props: TextSimulatorProps) {
   const classes = styleApp();
 
   const [values, setValues] = React.useState({
-    errorLogin: false,
-    messageError: '',
-    user: {} as User,
+    userName: '',
     loading: true,
-    currentText: 'А м',
     letterList: [] as LetterData[],
     passedList: [] as string[],
-    restart: true
+    timeList: [] as number[],
+    timer: 0 as any,
+    countError: 0,
+    banCountError: false,
+    restart: true,
+    finished: false
   });
 
   const [speed, setSpeed] = React.useState(0);
-  const [precision, setPrecision] = React.useState(0);
+  const [precision, setPrecision] = React.useState(100);
   const [openSnack, setOpenSnack] = React.useState(false);
-  const [messageSnack, setMessageSnack] = React.useState((<p>Ok</p>));
+  const [messageSnack, setMessageSnack] = React.useState((<p></p>));
   const [onHintError, setOnHintError] = React.useState(true);
+  const [openModal, setOpenModal] = React.useState(false);
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setValues({...values, finished: false});
+  }
+  const setError = (e: JSX.Element) => {
+    setMessageSnack(e);
+    setOpenSnack(true);
+  }
   const handleOnHint = (e: any) => {
     if (onHintError) return setOnHintError(!e.isTrusted);
     return setOnHintError(e.isTrusted);
   }
 
-  const handleOpenSnack = () => {
-    setOpenSnack(true);
-  };
-
   const handleCloseSnack = () => {
     setOpenSnack(false);
   };
 
-  React.useEffect(() => {
+  const handlePrecision = () => {
+    const resultError = parseFloat((100 - 100 * values.countError / values.letterList.length).toFixed(1));
+    setPrecision(resultError);
+  }
 
-    if(!values.restart) return;
-    
+
+  /////////////// START LOAD, Listening values.restart /////////////
+  /////////////// START LOAD, Listening values.restart /////////////
+  /////////////// START LOAD, Listening values.restart /////////////
+  React.useEffect(() => {
+    const userName = window.localStorage.userName;
+
+    if (!values.restart) return;
+
     fetch(textApi.ru.query)
       .then((response) => {
+        setSpeed(0);
+        setPrecision(100);
         setValues({
           ...values, loading: false,
-          restart: false
+          restart: false,
+          timer: 0,
+          userName
         });
         response.json().then((data) => {
-          console.log('PLPLP');
-
           setValues({
             ...values, loading: false,
             restart: false,
-            letterList: createList(data.text, classes.initLetter, classes.nextLetter,)
+            letterList: createList(data.text, classes.initLetter, classes.nextLetter), //data.text
+            userName
           });
         })
       })
       .catch((error) => {
-
+        console.log(error);
       })
-    setValues({ ...values, loading: true });
 
+    setValues({ ...values, loading: true, timeList: [], passedList: [] });
 
+  }, [values.restart]);
+  /////////////// END START LOAD, Listening values.restart /////////////
+  /////////////// END START LOAD, Listening values.restart /////////////
+  /////////////// END START LOAD, Listening values.restart /////////////
 
-  }, [values.restart])
-  console.log(values.restart);
+  /////////// Listening props.keyword ////////////
+  /////////// Listening props.keyword ////////////
+  /////////// Listening props.keyword ////////////
   React.useEffect(() => {
 
     let carrentIndex = values.passedList.length - 0;
@@ -131,11 +150,31 @@ function TextSimulator(props: TextSimulatorProps) {
     let passedList = values.passedList;
     let currentLetter = letterList[carrentIndex];
     let nextLetter = letterList[nextIndex];
+    let countError = values.countError;
+    let banCountError = values.banCountError;
+    let timeList = values.timeList;
 
+
+    const countIn10Second = values.timeList.filter((item, i, arr) => {
+      return item >= new Date().getTime() - 10000;
+    }).length * 6;
+    const countInMinute = values.timeList.filter((item, i, arr) => {
+      return item >= new Date().getTime() - 60000;
+    }).length;
+
+    if (new Date().getTime() - values.timeList[0] >= 60000) {
+      setSpeed(countInMinute);
+    } else {
+      setSpeed(countIn10Second);
+    }
 
     if (currentLetter) {
 
       if (props.keyword === currentLetter.value) {
+
+        timeList.push(props.newTimeEnter);
+
+        banCountError = false;
         console.log('===', props.keyword, currentLetter.value);
 
         if (nextLetter) {
@@ -145,39 +184,68 @@ function TextSimulator(props: TextSimulatorProps) {
         currentLetter.className = classes.passedLetter;
         letterList[carrentIndex] = currentLetter;
         passedList.push(props.keyword);
-        setOpenSnack(false);
+
+        handleCloseSnack();
 
       } else if (currentLetter.className !== classes.passedLetter) {
-        console.log('!==', props.keyword, currentLetter.value);
-
         currentLetter.className = classes.errorLetter;
+
+        if (!banCountError) {
+          countError += 1;
+          banCountError = true;
+        }
+
         letterList[carrentIndex] = currentLetter;
         if (currentLetter.value?.toLowerCase() === props.keyword && currentLetter.value !== props.keyword) {
-          handleOpenSnack()
-          setMessageSnack(<p>Преключитесь на заглавный шрифт</p>)
+
+          setError(<p>Преключитесь на заглавный шрифт</p>)
         } else if (currentLetter.value?.toUpperCase() === props.keyword && currentLetter.value !== props.keyword) {
-          handleOpenSnack()
-          setMessageSnack(<p style={{ textAlign: 'center' }}>Переключитесь на строчный шрифт</p>)
+
+          setError(<p style={{ textAlign: 'center' }}>Переключитесь на строчный шрифт</p>)
         } else {
-          handleOpenSnack()
-          setMessageSnack(
+
+          setError(
             <div style={{ textAlign: 'center' }}>
-              <p >Нажмите на клавишу - "{currentLetter.value === " " ? 'Пообел' : currentLetter.value}"</p>
+              <p>Нажмите на клавишу - "{currentLetter.value === " " ? 'Пообел' : currentLetter.value}"</p>
               <p>Вы нажали на - "{props.keyword === " " ? 'Пообел' : props.keyword}"</p>
             </div>
           )
         }
       }
-      setValues({ ...values, letterList: letterList });
-    }
-  }, [props])
 
+      let finished = letterList.length === passedList.length;
+      if (finished) {
+        setOpenModal(true);
+        const hystory = JSON.parse(window.localStorage.hystory ?? '[]');
+        // window.localStorage.setItem('hystory', JSON.stringify([
+
+        // ]));
+      }
+      setValues({ ...values, letterList: letterList, countError, banCountError, timeList, finished });
+      handlePrecision();
+    }
+  }, [props]);
+
+  /////////// END Listening props.keyword ////////////
+  /////////// END Listening props.keyword ////////////
+  /////////// END Listening props.keyword ////////////
+
+
+  React.useEffect(() => {
+
+  }, [values.finished]);
+
+  console.log(values);
+  
   return (
     <div>
       { values.loading ? <CircularProgress color='secondary' className={classes.loading} /> :
-        <Card style={{ width: '100%' }} >
+        <Card>
           <CardContent>
-            <Avatar></Avatar>
+            <div className={classes.wrapperAvatar}>
+              <Avatar className={classes.avatar}>{values.userName[0]}</Avatar>
+              <Typography variant="h5">{values.userName}</Typography>
+            </div>
             <div className={classes.textWrapper}>
               <div className={classes.textContent} >
                 {values.letterList.map((o, i) => <Letter key={i} value={o.value} className={o.className} />)}
@@ -186,14 +254,14 @@ function TextSimulator(props: TextSimulatorProps) {
               <div className={classes.textOptions}>
                 <Typography>СКОРОСТЬ</Typography>
                 <div>
-                  <AvTimerIcon style={{ fontSize: 40 }} />
-                  {speed} зн./мин
+                  <AvTimerIcon style={{ fontSize: 40, opacity: 0.5 }} />
+                  <span style={{ color: 'green' }}> {speed} зн./мин</span>
                 </div>
 
 
                 <Typography>ТОЧНОСТЬ</Typography>
-                <div><GpsFixedIcon style={{ fontSize: 40 }} />
-                  {precision} %
+                <div><GpsFixedIcon style={{ fontSize: 40, opacity: 0.5 }} />
+                  <span style={{ color: 'green' }}> {precision} %</span>
                 </div>
                 <Divider style={{ margin: '20px 0' }} />
 
@@ -204,7 +272,7 @@ function TextSimulator(props: TextSimulatorProps) {
                 <div className={classes.restartButton}>
 
                   <Button
-                    onClick={() => setValues({ ...values, restart: true })}
+                    onClick={() => setValues({ ...values, restart: true, loading: true, timeList: [], passedList: [] })}
                     color="primary"
                     startIcon={<RefreshIcon />}
                   > Начать заново</Button>
@@ -213,11 +281,9 @@ function TextSimulator(props: TextSimulatorProps) {
             </div>
           </CardContent>
           <CardActions>
-
           </CardActions>
         </Card>
       }
-
 
       <Snackbar
         anchorOrigin={{
@@ -230,19 +296,47 @@ function TextSimulator(props: TextSimulatorProps) {
         message={messageSnack}
         action={
           <React.Fragment>
-
             <Switch checked={onHintError} onChange={handleOnHint} name="antoine" />
-
             <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnack}>
               <CloseIcon fontSize="small" />
             </IconButton>
-
           </React.Fragment>
         }
       />
-    </div>
 
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div className={classes.modal}>
+
+          <Typography variant="h4">
+            Поздравляем! {values.userName}
+          </Typography>
+          <Typography variant="h5">
+            Ваш результат
+          </Typography>
+          <Typography variant="h5">
+            <span style={{ color: 'green' }}> {speed} зн./мин</span>
+          </Typography>
+          <Typography variant="h5">
+            <span style={{ color: 'green' }}> точность {precision} %</span>
+          </Typography>
+
+          <div className={classes.modalButton}>
+            <Button variant="outlined" onClick={handleCloseModal}>Ok</Button>
+          </div>
+        </div>
+
+      </Modal>
+    </div>  
   )
 }
-
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
+/////////////////////////// TextSimulator /////////////////////////
 export default TextSimulator;

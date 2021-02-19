@@ -1,15 +1,11 @@
 import React from 'react';
 import {
     Button,
-    Typography, InputAdornment,
-    Divider, CircularProgress,
+    Typography,
     TextField,
     FormControl,
-    InputLabel,
-    FormHelperText,
-    Input
 } from '@material-ui/core';
-import styleForm from './styleForm';
+import styleForm from '../../theme/styleForm';
 
 interface StartFormProps {
     success: (userName: string) => void,

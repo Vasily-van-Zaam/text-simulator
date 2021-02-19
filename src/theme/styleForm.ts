@@ -30,35 +30,6 @@ export default makeStyles((theme) => ({
         marginBottom: 30,
         transition: 'all 1s linear 0s',
     },
-    formHeaderLoaded: {
-        transition: 'all 1s linear 0s',
-        opacity: 0
-    },
-    formContent: {
-        transitionDelay: '0s',
-        transition: 'all 0.3s linear 0s',
-        zIndex: 1,
-        padding: '20px 40px'
-    },
-
-    logo: {
-        zIndex: 1000,
-        pointerEvents: 'none',
-        width: 180,
-        borderRadius: 0,
-        marginBottom: 15,
-    },
-    textLogo: {
-        
-        zIndex: 100,
-        fontSize: 16,
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 19,
-        letterSpacing: '0em',
-        textAlign: 'center'
-    },
-
     blockBotton: {
         marginTop: 20,
         marginBottom: 0
