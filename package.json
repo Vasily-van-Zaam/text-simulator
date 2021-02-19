@@ -1,10 +1,9 @@
 {
     "homepage": "http://Vasily-van-Zaam.github.io/text-simulator/",
     "name": "text-simulator",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
-        "@apollo/client": "^3.3.8",
         "@material-ui/core": "^4.11.3",
         "@material-ui/icons": "^4.11.2",
         "@testing-library/jest-dom": "^5.11.4",

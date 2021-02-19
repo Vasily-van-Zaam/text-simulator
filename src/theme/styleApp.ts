@@ -59,11 +59,23 @@ export default makeStyles(() => ({
         padding: 3
     },
     wrapperAvatar:{
-        display: 'flex', alignItems: 'center',
+        display: 'flex', 
+        alignItems: 'center',
         justifyContent: 'left',
     },
+
     avatar: {
         margin: 5
+    },
+    avatarContent: {
+        flex: 5,
+        display: 'flex',
+        alignItems: "center", right: 0
+    },
+    actionAvatarContent: {
+        flex: 1,
+        display: 'flex',
+        alignItems: "center", right: 0
     },
     modal: {
         width: 500,
@@ -77,6 +89,35 @@ export default makeStyles(() => ({
         backgroundColor: 'white'
     },
     modalButton: {
-        marginTop: 30
+        marginTop: 30,
+        marginLeft: 20
+    },
+    profileHeaderList: {
+        color: 'white',
+        marginTop: 20,
+        height: 50,
+        display: 'flex', 
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        background: 'gray',
+        borderRadius: 6,
+    },
+    profileList: {
+        overflowY: 'auto', 
+        maxHeight: 300 
+    },
+    profileListItem: {
+        alignItems: 'center',
+        height: 50,
+        display: 'flex', 
+        justifyContent: 'space-around',
+        '& div': {
+            textAlign: 'center',
+            width: '33.3333%'
+        },
+        '&:nth-child(even) ': {
+            backgroundColor: '#f1f1f1',
+        } 
+
     }
 }));

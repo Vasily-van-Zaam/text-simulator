@@ -123,7 +123,7 @@ function TextSimulator(props: TextSimulatorProps) {
           setValues({
             ...values, loading: false,
             restart: false,
-            letterList: createList(data.text, classes.initLetter, classes.nextLetter), //data.text
+            letterList: createList(data.text, classes.initLetter, classes.nextLetter),
             userName
           });
         })
@@ -143,7 +143,8 @@ function TextSimulator(props: TextSimulatorProps) {
   /////////// Listening props.keyword ////////////
   /////////// Listening props.keyword ////////////
   React.useEffect(() => {
-
+    
+    if (values.finished) return;
     let carrentIndex = values.passedList.length - 0;
     let nextIndex = carrentIndex + 1;
     let letterList = values.letterList;
@@ -155,6 +156,9 @@ function TextSimulator(props: TextSimulatorProps) {
     let timeList = values.timeList;
 
 
+    const countInOneSecond = values.timeList.filter((item, i, arr) => {
+      return item >= new Date().getTime() - 1000;
+    }).length * 60;
     const countIn10Second = values.timeList.filter((item, i, arr) => {
       return item >= new Date().getTime() - 10000;
     }).length * 6;
@@ -162,8 +166,11 @@ function TextSimulator(props: TextSimulatorProps) {
       return item >= new Date().getTime() - 60000;
     }).length;
 
+    
     if (new Date().getTime() - values.timeList[0] >= 60000) {
       setSpeed(countInMinute);
+    } else if (new Date().getTime() - values.timeList[0] < 10000) {
+      setSpeed(countInOneSecond);
     } else {
       setSpeed(countIn10Second);
     }
@@ -216,10 +223,15 @@ function TextSimulator(props: TextSimulatorProps) {
       let finished = letterList.length === passedList.length;
       if (finished) {
         setOpenModal(true);
+        /////////// WRITE HYSTORY IN LOCALSTORAGE ////////////
+        /////////// WRITE HYSTORY IN LOCALSTORAGE ////////////
+        /////////// WRITE HYSTORY IN LOCALSTORAGE ////////////
         const hystory = JSON.parse(window.localStorage.hystory ?? '[]');
-        // window.localStorage.setItem('hystory', JSON.stringify([
-
-        // ]));
+        hystory.push({ "speed": speed, "precision": precision, "date": new Date()});
+        window.localStorage.setItem('hystory', JSON.stringify(hystory));
+        /////////// END WRITE HYSTORY IN LOCALSTORAGE ////////////
+        /////////// END WRITE HYSTORY IN LOCALSTORAGE ////////////
+        /////////// END WRITE HYSTORY IN LOCALSTORAGE ////////////
       }
       setValues({ ...values, letterList: letterList, countError, banCountError, timeList, finished });
       handlePrecision();
@@ -234,8 +246,6 @@ function TextSimulator(props: TextSimulatorProps) {
   React.useEffect(() => {
 
   }, [values.finished]);
-
-  console.log(values);
   
   return (
     <div>

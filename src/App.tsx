@@ -33,12 +33,6 @@ function App() {
     newTimeEnter: 0,
   });
 
-  const [dataProfile, setProfile] = React.useState({
-    userName: '',
-    hystory: '',
-    lastResult: ''
-  });
-
   const handleStartForm = (userName: string) => {
     window.localStorage.setItem('userName', userName)
     setStartState({
@@ -85,7 +79,6 @@ function App() {
         <BottomNavigation
           value={valueMenu}
           onChange={(event, newValue) => {
-            console.log(newValue);
             setMenu(newValue);
           }}
           showLabels
