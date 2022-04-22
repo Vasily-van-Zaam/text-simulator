@@ -43,7 +43,7 @@ function StartForm(props: StartFormProps) {
                     <Button variant="contained" 
                     color="primary"
                     onClick={handleForm}
-                    >Сохронить</Button>
+                    >Сохранить</Button>
                 </div>    
                 
             </FormControl>
